@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Formik } from "formik";
 import { Grid, Row, Column, Button, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
+import { PassField } from "./components/death-form/field/password/password";
 
 
 
@@ -12,7 +13,7 @@ const DeathValidation = () => {
     const [initialV, setInitiatV] = useState({ endorsement: "" });
 
     const validationSchema = Yup.object().shape({
-        endorsement: Yup.string().required("You must endorse to validate"),
+        password: Yup.string().required("You must endorse to validate"),
     })
 
 
@@ -20,15 +21,15 @@ const DeathValidation = () => {
         <Formik
             initialValues={initialV}
             validationSchema={validationSchema}
-            onSubmit={() => { "" }}
+            onSubmit={(values, { resetForm }) => {
+                console.log(values)
+                resetForm();
+            }}
 
         >
             {(formik) => {
                 const {
-                    values,
                     handleSubmit,
-                    errors,
-                    touched,
                     isValid,
                     dirty,
                 } = formik;
@@ -37,18 +38,25 @@ const DeathValidation = () => {
                         <Grid fullWidth={true} className={styles.p0}>
                             <Row>
                                 <Column>
-                                <span>Date</span>
+                                    <span>Date</span>
                                 </Column>
                                 <Column><span>Time</span></Column>
+                            </Row>
+                            <Row>
+                                <Column>
+                                    <span>Lieu de décès</span>
+                                </Column>
+                                <Column>
+                                    <span>Cause principale</span>
+                                </Column>
                             </Row>
 
 
                             <Row>
-                                <Row>
-                                    <Column>
-                                        {/* {FieldForm("observation")} */}
-                                    </Column>
-                                </Row>
+                                <Column>
+                                    <PassField />
+                                </Column>
+
 
                                 <Column>
                                     <Row>
@@ -61,7 +69,7 @@ const DeathValidation = () => {
                                                     size="sm"
                                                     isSelected={true}
                                                 >
-                                                    {t("cancelButton","Annuler")}
+                                                    {t("cancelButton", "Annuler")}
                                                 </Button>
                                                 <Button
                                                     className={styles.buttonStyle1}
@@ -71,7 +79,7 @@ const DeathValidation = () => {
                                                     isSelected={true}
                                                     disabled={!(dirty && isValid)}
                                                 >
-                                                    {t("confirmButton","Enregistrer")}
+                                                    {t("confirmButton", "Enregistrer")}
                                                 </Button>
                                             </div>
                                         </Column>
