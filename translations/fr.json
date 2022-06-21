@@ -1,6 +1,7 @@
 {
   "validationDeathTitle": "Validation de la mort",
   "cardValidationTitle": "Résumé du décès",
+  "messageErrorPassword": "Vous devriez signer avant de valider",
   "passLabelText": "Signature",
   "causeIntermLabel": "Cause intermediare",
   "causeInitLabel": "Cause initiale",

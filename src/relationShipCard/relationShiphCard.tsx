@@ -1,7 +1,7 @@
 import styles from "./relationShipCard.scss";
 import React from "react";
 import { Column, Row, Grid } from 'carbon-components-react';
-import PatientCardCell from "../patient-card/patient-cardCell";
+import FormatCardCell from "../patient-card/patient-cardCell";
 import { Icon } from "@iconify/react";
 
 const RelationShipCard = ({ relationshipName, relationshipType, relationshipPhone }) => {
@@ -27,7 +27,7 @@ export default RelationShipCard;
     //     {relationshipName}
     //     <Column sm={1} className={styles.relationShipType}>
     //         {relationshipType}
-    //         <PatientCardCell
+    //         <FormatCardCell
     //             icon="bxs:phone-call"
     //             label={relationshipPhone}
     //         />

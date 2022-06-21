@@ -25,7 +25,7 @@ export const Input: React.FC<InputProps> = props => {
         {...props}
         {...field}
         invalid={!!(meta.error)}
-        invalidText={t(meta.error)}
+        invalidText={t("messageErrorPassword",meta.error)}
         value={field.value || ''}
         size="lg"
       />

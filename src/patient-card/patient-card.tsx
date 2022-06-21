@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Column, Grid, Row, Tile } from "carbon-components-react";
 import { Icon } from "@iconify/react";
 import styles from "./patient-card.scss";
-import PatientCardCell from "./patient-cardCell";
+import FormatCardCell from "./patient-cardCell";
 import RelationShipCard from "../relationShipCard/relationShiphCard";
 import { navigate, NavigateOptions } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
@@ -25,21 +25,11 @@ const PatientCard = ({ Patient }) => {
     >
       <Grid className={styles.pm0} fullWidth={true}>
         <Row className={styles.pm0}>
-          {/* Partie reserve pour mettre la photo */}
-          {/* <Column className={styles.patientPhoto} lg={1}>
-            <p className={styles.alias}>
-              {(
-                Patient?.firstName?.split("")[0] +
-                Patient?.lastName?.[0]?.split("")[0]
-              ).toUpperCase()}
-            </p>
-          </Column> */}
-          {/* Partie reserve pour les infos */}
-          <Column className={styles.pm0} lg={11}>
+          <Column className={styles.pm0} lg={12}>
             <Grid className={styles.pm0} fullWidth={true}>
               <Column lg={12}>
                 <Row className={styles.borderBottom}>
-                  <Column className={styles.pm0} lg={12}>
+                  <Column className={styles.pm0}>
 
                     <h1 className={styles.name}>
                       {Patient.gender == "F" ? (
@@ -65,45 +55,45 @@ const PatientCard = ({ Patient }) => {
               </Column>
               <Row>
                 <Column lg={4}>
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="clarity:calendar-solid"
                     label={Patient.birth}
                   />
 
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="entypo:location-pin"
                     label={Patient.residence}
                   />
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="bxs:building"
                     label={Patient.habitat}
                   />
                 </Column>
 
                 <Column lg={3}>
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="ant-design:field-number-outlined"
                     label={Patient.identify}
                   />
 
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="carbon:user-multiple"
                     label={Patient.matrimonial}
                   />
 
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="ic:outline-work"
                     label={Patient.occupation}
                   />
                 </Column>
 
                 <Column lg={3}>
-                  <PatientCardCell
+                  <FormatCardCell
                     icon="bxs:phone-call"
                     label={Patient.phoneNumber}
                   />
-                  <PatientCardCell icon="ep:place" label={Patient.birthplace} />
-                  <PatientCardCell
+                  <FormatCardCell icon="ep:place" label={Patient.birthplace} />
+                  <FormatCardCell
                     icon="akar-icons:link-chain"
                     label={
                       Patient?.relationship?.[0] != "" &&

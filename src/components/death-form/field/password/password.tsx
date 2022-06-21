@@ -10,7 +10,7 @@ export const PassField: React.FC = () => {
   return (
     <>
       <Input
-        className={styles.maxSize_field}
+        //className={styles.maxSize_field}
         id="password"
         name="password"
         labelText={"password"}

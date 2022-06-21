@@ -1,9 +1,10 @@
 {
   "validationDeathTitle": "Validate a death",
+  "messageErrorPassword": "You should endorce before validate",
   "passLabelText": "Endorcement",
   "cardValidationTitle": "Death resume",
-  "causeIntermLabel": "Second cause",
-  "causeInitLabel": "First cause",
+  "causeIntermLabel": "Third cause",
+  "causeInitLabel": "Second cause",
   "cancelButton": "Cancel",
   "confirmButton": "Confirm"
 }
