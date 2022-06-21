@@ -1,6 +1,9 @@
 {
   "validationDeathTitle": "Validation de la mort",
-  "Endorcement": "Signature",
+  "cardValidationTitle": "Résumé du décès",
+  "passLabelText": "Signature",
+  "causeIntermLabel": "Cause intermediare",
+  "causeInitLabel": "Cause initiale",
   "cancelButton": "Annuler",
   "confirmButton": "Enregistrer"
 }

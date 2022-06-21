@@ -34,7 +34,7 @@
     padding: 20px;
 
     // &:hover{
-        
+
     // }
 }
 
@@ -46,12 +46,56 @@
     width: 100%;
 }
 
-.marginItem {
-    margin-bottom: 20px;
-    margin-top: 20px;
+.m1 {
+    margin-left: 1px;
 }
 
-.marginSelect {
-    margin-bottom: 20px;
-    margin-top: 15px;
+.m2 {
+    margin-left: 2px;
+}
+
+.p0 {
+    padding: 0;
+}
+
+.main {
+    margin-top: 25px;
+    margin-bottom: 50px;
+}
+
+.icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+    margin-bottom: 6px;
+    color: rgb(101, 101, 101);
+    float: right
+}
+
+.separator {
+    border-bottom: 0.5px solid #d6d6d6;
+    margin-bottom: .6rem;
+}
+
+.title {
+    font-weight: bold;
+}
+
+.font {
+    font-size: 16px;
+    font-weight: lighter;
+    color: gray;
+}
+
+.column2 {
+    padding: 0;
+}
+
+.column1 {
+    padding: 0;
+    margin: 0;
+}
+
+.infoCard {
+    margin-bottom: 40px;
 }

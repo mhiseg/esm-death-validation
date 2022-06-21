@@ -1,6 +1,9 @@
 {
   "validationDeathTitle": "Validate a death",
   "passLabelText": "Endorcement",
+  "cardValidationTitle": "Death resume",
+  "causeIntermLabel": "Second cause",
+  "causeInitLabel": "First cause",
   "cancelButton": "Cancel",
   "confirmButton": "Confirm"
 }
