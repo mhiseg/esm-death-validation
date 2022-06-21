@@ -1,0 +1,27 @@
+.RelationShipCard {
+    width: 100%;
+    position: relative;
+}
+
+.relationShipName {
+    margin-left: -4px;
+}
+
+.relationShipType {
+    margin-right: 10px;
+    margin-left: 5px;
+    position: absolute;
+    margin-top: -5px;
+    border: 1px solid rgb(72, 197, 206);
+    font-size: 10px;
+}
+
+.relationshipPhone {
+    position: absolute;
+    margin-top: 8px;
+    margin-left: 5px;
+}
+
+.relationshipPhoneIcon {
+    color: #504f4f;
+}

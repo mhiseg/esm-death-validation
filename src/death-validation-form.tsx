@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { PassField } from "./components/death-form/field/password/password";
 import { Icon } from '@iconify/react';
 import InfoCard from "./components/info-card/info-card";
+import PatientCard from "./patient-card/patient-card";
 
 
 
@@ -17,16 +18,36 @@ const DeathValidation = () => {
     const validationSchema = Yup.object().shape({
         password: Yup.string().required("You must endorse to validate"),
     })
+    let patient = {
+        id: 1,
+        identify: 12,
+        No_dossier: '44545dsd',
+        firstName: 'chilem',
+        lastName: 'exantus',
+        birth: '28-07-99',
+        residence: 'ouest',
+        habitat: 'rural',
+        phoneNumber: '31282122',
+        gender: 'M',
+        birthplace: 'ouest',
+        dead: false,
+        occupation: 'programmeur',
+        matrimonial: 'celibataire',
+        deathDate: '20-09-99',
+        relationship:[]
+    }
 
 
     return (
-        <Formik
-            initialValues={initialV}
-            validationSchema={validationSchema}
-            onSubmit={(values, { resetForm }) => {
-                console.log(values)
-                resetForm();
-            }}
+        <>
+            <PatientCard Patient={patient} />
+            <Formik
+                initialValues={initialV}
+                validationSchema={validationSchema}
+                onSubmit={(values, { resetForm }) => {
+                    console.log(values)
+                    resetForm();
+                }}
 
         >
             {(formik) => {
@@ -76,39 +97,40 @@ const DeathValidation = () => {
                                 </Column>
 
 
-                                <Column>
-                                    <Row>
-                                        <Column className={styles.marginTop} lg={12} >
-                                            <div className={styles.flexEnd}>
-                                                <Button
-                                                    className={styles.buttonStyle}
-                                                    kind="danger--tertiary"
-                                                    type="reset"
-                                                    size="sm"
-                                                    isSelected={true}
-                                                >
-                                                    {t("cancelButton", "Annuler")}
-                                                </Button>
-                                                <Button
-                                                    className={styles.buttonStyle1}
-                                                    kind="tertiary"
-                                                    type="submit"
-                                                    size="sm"
-                                                    isSelected={true}
-                                                    disabled={!(dirty && isValid)}
-                                                >
-                                                    {t("confirmButton", "Enregistrer")}
-                                                </Button>
-                                            </div>
-                                        </Column>
-                                    </Row>
-                                </Column>
-                            </Row>
-                        </Grid>
-                    </Form>
-                );
-            }}
-        </Formik>
+                                    <Column>
+                                        <Row>
+                                            <Column className={styles.marginTop} lg={12} >
+                                                <div className={styles.flexEnd}>
+                                                    <Button
+                                                        className={styles.buttonStyle}
+                                                        kind="danger--tertiary"
+                                                        type="reset"
+                                                        size="sm"
+                                                        isSelected={true}
+                                                    >
+                                                        {t("cancelButton", "Annuler")}
+                                                    </Button>
+                                                    <Button
+                                                        className={styles.buttonStyle1}
+                                                        kind="tertiary"
+                                                        type="submit"
+                                                        size="sm"
+                                                        isSelected={true}
+                                                        disabled={!(dirty && isValid)}
+                                                    >
+                                                        {t("confirmButton", "Enregistrer")}
+                                                    </Button>
+                                                </div>
+                                            </Column>
+                                        </Row>
+                                    </Column>
+                                </Row>
+                            </Grid>
+                        </Form>
+                    );
+                }}
+            </Formik>
+        </>
     );
 }
 
