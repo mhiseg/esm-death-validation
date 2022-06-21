@@ -35,6 +35,7 @@
 .patientPhoto {
     border-radius: 5px;
     position: relative;
+    height: min-content;
     width: 100%;
     background-color: rgb(12, 247, 165);
 
@@ -53,7 +54,6 @@
 @media screen and (min-width: 1900px) {
     .patientPhoto {
         border-radius: 5px;
-        position: absolute;
         width: 100%;
         background-color: rgb(12, 247, 165);
 
@@ -85,6 +85,7 @@
 
 
 .borderBottom {
+    width: 110%;
     border-bottom: 0.5px solid #d6d6d6;
     margin-left: 2px;
     margin-bottom: .6rem;

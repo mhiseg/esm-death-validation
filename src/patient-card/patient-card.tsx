@@ -8,17 +8,10 @@ import { navigate, NavigateOptions } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 
 const PatientCard = ({ Patient }) => {
-  const declare: NavigateOptions = {
-    to: window.spaBase + "/death/patient/" + Patient.id,
-  };
-  const valided: NavigateOptions = {
-    to: window.spaBase + "/death/patient/validation/" + Patient.id,
-  };
 
   const { t } = useTranslation();
 
   return (
-    console.log(Patient),
     <Tile
       className={styles.cardBox}
       light={true}

@@ -26,7 +26,7 @@ const DeathValidation = () => {
         residence: 'ouest',
         habitat: 'rural',
         phoneNumber: '31282122',
-        gender: 'F',
+        gender: 'M',
         birthplace: 'ouest',
         dead: false,
         occupation: 'programmeur',
