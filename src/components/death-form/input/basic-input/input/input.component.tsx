@@ -21,7 +21,6 @@ export const Input: React.FC<InputProps> = props => {
   return (
     <div>
       <TextInput
-        type="password"
         {...props}
         {...field}
         invalid={!!(meta.error)}

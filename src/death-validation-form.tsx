@@ -4,39 +4,45 @@ import * as Yup from 'yup';
 import { Formik } from "formik";
 import { Grid, Row, Column, Button, Form } from "carbon-components-react";
 import { useTranslation } from "react-i18next";
-import { PassField } from "./components/death-form/field/password/password";
-import { Icon } from '@iconify/react';
 import InfoCard from "./components/info-card/info-card";
 import PatientCard from "./patient-card/patient-card";
 import FormatCardCell from "./patient-card/patient-cardCell";
-import { getCurrentUser, openmrsFetch } from "@openmrs/esm-framework";
-import { formatPatient, performLogin } from "./components/patient-registration.ressources";
+import { getCurrentUser, navigate, openmrsFetch, showToast } from "@openmrs/esm-framework";
+import { formatPatient, performLogin, validatePerson } from "./components/patient-registration.ressources";
+import { Input } from "./components/death-form/input/basic-input/input/input.component";
+import { deathValidated } from "./components/constants";
 
 
 const DeathValidationForm = ({ patient }) => {
-    const [currentUser, setCurrentUser] = useState();
-
-    const [initialV, setInitialV] = useState( {
-        password: "",
-        patient:  formatPatient(patient)
+    const [initialV, setInitialV] = useState({
+        uuid: patient.uuid,
+        confirmationCode: "",
+        patient: formatPatient(patient)
     });
     const { t } = useTranslation();
+    const abortController = new AbortController();
 
     const validationSchema = Yup.object().shape({
-        password: Yup.string().required("You must endorse to validate"),
+        confirmationCode: Yup.string().required("You must endorse to validate"),
     })
-    // console.log(patientFormat, '------------');
 
+    const validate = (values,resetForm) => {
+        console.log(values.confirmationCode == values.patient.No_dossier)
+        if (values.confirmationCode == values.patient.No_dossier) {
+            validatePerson(abortController, { attributes: [{ attributeType: deathValidated, value: Boolean(true) }] },values.uuid).then(results => {
+                showToast({
+                    title: t('success', 'Successfully Validate'),
+                    kind: 'success',
+                    description: 'Death validated succesfully',
+                })
+                resetForm();
+                    navigate({ to: window.spaBase + "/death/list-unvalidate"});
+                  
+            })
+            .catch(error => showToast({ description: error.message }))
 
-    useEffect(() => {
-        const subscription = getCurrentUser().subscribe(user => { setCurrentUser(user['username']) })
-        return () => { subscription };
-    }, []);
-
-    const validate = (currentUser, values) => {
-        performLogin(currentUser, values.password).then((data) => {
-            console.log(data, '------------');
-        })
+        }else
+        showToast({ description: t("errorValidate","Code patient is incorrect") })
     }
 
     return (
@@ -46,17 +52,17 @@ const DeathValidationForm = ({ patient }) => {
                 initialValues={initialV}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    validate(currentUser, values)
-                    resetForm();
-                }}
-
+                    validate(values,resetForm)
+                    
+                  }
+                }
             >
                 {(formik) => {
                     const {
                         values,
                         handleSubmit,
                         isValid,
-                        dirty,                        
+                        dirty,
                     } = formik;
                     return (
                         <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
@@ -103,7 +109,7 @@ const DeathValidationForm = ({ patient }) => {
 
                                 <Row>
                                     <Column>
-                                        <PassField />
+                                        <Input id={"confirmationCode"} name={"confirmationCode"} labelText={t("confirmationCode")} light={false} />
                                     </Column>
 
 

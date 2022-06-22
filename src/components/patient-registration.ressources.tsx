@@ -93,8 +93,8 @@ export function formAddres(address): Address {
     return null;
   }
 }
-export function savePerson(abortController: AbortController, person: Person, uuid?: string) {
-  return openmrsFetch(`/ws/rest/v1/person/${uuid ? uuid : ''}`, {
+export function validatePerson(abortController: AbortController, person, uuid: string) {
+  return openmrsFetch(`/ws/rest/v1/person/${uuid}`, {
     method: 'POST',
     body: person,
     headers: { 'Content-Type': 'application/json' },
@@ -137,16 +137,14 @@ export const formatPatient = (patient) => {
       (attribute) => attribute.type == "Telephone Number"
     )?.value,
     gender: checkUndefined(patient?.person?.gender),
-    birthplace: personAttributes.find(
-      (attribute) => attribute.type == "Birthplace"
-    )?.value,
+    birthplace: personAttributes.find( (attribute) => attribute.type == "Birthplace")?.value,
     death: patient.person.dead,
     occupation: "",
     matrimonial: "",
     causeOfDeath: patient.person.causeOfDeath.display,
     deathDate: patient.person.deathDate,
-    initialCause: personAttributes.find((attribute) => attribute.type == "Initial Cause Of Death").value,
-    secondaryCause: personAttributes.find((attribute) => attribute.type == "Secondary Cause Of Death").value
+    initialCause: personAttributes.find((attribute) => attribute.type == "Initial Cause Of Death")?.value,
+    secondaryCause: personAttributes.find((attribute) => attribute.type == "Secondary Cause Of Death")?.value
   };
 };
 
