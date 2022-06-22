@@ -28,8 +28,8 @@ import { getAsyncLifecycle, defineConfigSchema } from "@openmrs/esm-framework";
    return {
      pages: [
        {
-         load: getAsyncLifecycle(() => import("./death-validation-component"), options),
-         route: "death/patient/validation",
+         load: getAsyncLifecycle(() => import("./root.component"), options),
+         route: "death/patient/validate",
        },
      ]
    };

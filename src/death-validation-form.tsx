@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./form.scss"
 import * as Yup from 'yup';
 import { Formik } from "formik";
@@ -10,52 +10,42 @@ import InfoCard from "./components/info-card/info-card";
 import PatientCard from "./patient-card/patient-card";
 import FormatCardCell from "./patient-card/patient-cardCell";
 import { getCurrentUser, openmrsFetch } from "@openmrs/esm-framework";
+import { formatPatient } from "./components/patient-registration.ressources";
 
-const DeathValidation = () => {
 
+
+const DeathValidationForm = ({patient}) => {
+    const [user, setUser] = useState(null)
     const { t } = useTranslation();
     const [initialV, setInitiatV] = useState({ endorsement: "" });
-    let User = getCurrentUserName();
 
     const validationSchema = Yup.object().shape({
         password: Yup.string().required("You must endorse to validate"),
     })
 
-    let patient = {
-        id: 1,
-        identify: 12,
-        No_dossier: '44545dsd',
-        firstName: 'chilem',
-        lastName: 'exantus',
-        birth: '28-07-99',
-        residence: 'ouest',
-        habitat: 'rural',
-        phoneNumber: '31282122',
-        gender: 'M',
-        birthplace: 'ouest',
-        dead: false,
-        occupation: 'programmeur',
-        matrimonial: 'celibataire',
-        deathDate: '20-09-99',
-        relationship: []
-    };
 
-      function getCurrentUserName() {
+    useEffect(() => {
+        const subscription = getCurrentUser().subscribe(
+            user => {
+                setUser(user.username)
+            }
+        )
 
-        return  openmrsFetch('/ws/rest/v1/session', {
-            method: "GET",
-          }).then(data=>{return})
+        return () => {
+            subscription;
+        };
+    }, []);
 
-    }
+    console.log(user);
 
-    console.log("*********************", User)
     return (
         <>
-            <PatientCard Patient={patient} />
+            <PatientCard Patient={formatPatient(patient)} />
             <Formik
                 initialValues={initialV}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
+                    console.log(values)
                     resetForm();
                 }}
 
@@ -152,4 +142,4 @@ const DeathValidation = () => {
     );
 }
 
-export default DeathValidation;
+export default DeathValidationForm;
