@@ -1,15 +1,11 @@
 import { useEffect, useReducer } from "react";
 import { PatientUuid } from "@openmrs/esm-api";
-import { fetchObsByPatientAndEncounterType, fetchPatient, fetchRelationships } from "./patient-registration.ressources";
-import { Relationships } from "./patient-registration-types";
-import { encounterTypeCheckIn } from "./constants";
+import { fetchPatient } from "./patient-registration.ressources";
 export type NullablePatient = fhir.Patient | null;
 
 interface CurrentPatientState {
   patientUuid: string | null;
   patient: any;
-  relationships: any;
-  obs: any
   isPendingUuid: boolean;
   isLoadingPatient: boolean;
   err: Error | null;
@@ -23,8 +19,6 @@ interface LoadPatient {
 interface NewPatient {
   type: ActionTypes.newPatient;
   patient: NullablePatient;
-  relationships: Relationships[];
-  obs: any[]
 }
 
 interface PatientLoadError {
@@ -43,8 +37,6 @@ enum ActionTypes {
 const initialState: CurrentPatientState = {
   patientUuid: null,
   patient: null,
-  relationships: null,
-  obs: null,
   isPendingUuid: true,
   isLoadingPatient: false,
   err: null,
@@ -66,8 +58,6 @@ function reducer(
         ...state,
         patientUuid: action.patientUuid,
         patient: null,
-        relationships: null,
-        obs: null,
         isPendingUuid: false,
         isLoadingPatient: true,
         err: null,
@@ -76,8 +66,6 @@ function reducer(
       return {
         ...state,
         patient: action.patient,
-        relationships: action.relationships,
-        obs: action.obs,
         isPendingUuid: false,
         isLoadingPatient: false,
         err: null,
@@ -112,23 +100,16 @@ export function usePatient(patientUuid?: string) {
           patientUuid: patientUuidFromUrl,
         });
       } else {
-        dispatch({ type: ActionTypes.newPatient, patient: null, relationships: null, obs: null });
+        dispatch({ type: ActionTypes.newPatient, patient: null});
       }
     }
-
     let active = true;
     if (state.isLoadingPatient && state.patientUuid) {
-
-
       fetchPatient(state.patientUuid).then(
         async (data) => {
-          const relationships = await fetchRelationships(data.data.uuid);
-          const obs = await fetchObsByPatientAndEncounterType(data.data.uuid, encounterTypeCheckIn);
           active &&
             dispatch({
               patient: data,
-              relationships: relationships,
-              obs: obs,
               type: ActionTypes.newPatient,
             })
         },
@@ -139,8 +120,6 @@ export function usePatient(patientUuid?: string) {
             type: ActionTypes.loadError,
           })
       );
-
-
     }
     return () => {
       active = false;
@@ -164,8 +143,6 @@ export function usePatient(patientUuid?: string) {
   return {
     isLoading: state.isPendingUuid || state.isLoadingPatient,
     patient: state.patient,
-    relationships: state.relationships,
-    obs: state.obs,
     patientUuid: patientUuid ?? state.patientUuid,
     error: state.err,
   };

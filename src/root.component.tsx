@@ -5,7 +5,7 @@ import DeathValidation from './death-validation-component';
 
 const RootComponent: React.FC = () => {
   return (
-    <BrowserRouter basename={`${window.spaBase}/death/patient/validate`}>
+    <BrowserRouter basename={`${window.spaBase}/death/validate/patient`}>
       <Route exact path="/:patientUuid">
         <DeathValidation />
       </Route>

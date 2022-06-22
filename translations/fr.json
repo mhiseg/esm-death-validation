@@ -3,7 +3,7 @@
   "cardValidationTitle": "Résumé du décès",
   "messageErrorPassword": "Vous devriez signer avant de valider",
   "passLabelText": "Signature",
-  "causeIntermLabel": "Cause intermediare",
+  "causeSecondLabel": "Cause Secondaire",
   "causeInitLabel": "Cause initiale",
   "cancelButton": "Annuler",
   "confirmButton": "Enregistrer"

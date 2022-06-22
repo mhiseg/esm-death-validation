@@ -3,8 +3,8 @@
   "messageErrorPassword": "You should endorce before validate",
   "passLabelText": "Endorcement",
   "cardValidationTitle": "Death resume",
-  "causeIntermLabel": "Third cause",
-  "causeInitLabel": "Second cause",
+  "causeSecondLabel": "Secondary cause",
+  "causeInitLabel": "Initial cause",
   "cancelButton": "Cancel",
   "confirmButton": "Confirm"
 }

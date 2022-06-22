@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./form.scss"
 import * as Yup from 'yup';
 import { Formik } from "formik";
@@ -14,36 +14,31 @@ import { formatPatient, performLogin } from "./components/patient-registration.r
 
 
 const DeathValidationForm = ({ patient }) => {
-    const [[user, password], setUser] = useState(['',''])
+    const [currentUser, setCurrentUser] = useState();
+
+    const [initialV, setInitialV] = useState( {
+        password: "",
+        patient:  formatPatient(patient)
+    });
     const { t } = useTranslation();
-    const [initialV, setInitiatV] = useState({ endorsement: "" });
-    const [userValidation, setUserValidation] = useState(null);
 
     const validationSchema = Yup.object().shape({
         password: Yup.string().required("You must endorse to validate"),
     })
+    // console.log(patientFormat, '------------');
 
 
     useEffect(() => {
-        const subscription = getCurrentUser().subscribe(
-            user => {
-                setUser([user.username, ''])
-            }
-        )
-
-        return () => {
-            subscription;
-        };
+        const subscription = getCurrentUser().subscribe(user => { setCurrentUser(user['username']) })
+        return () => { subscription };
     }, []);
 
-    useEffect(() => {
-        if (password !== '' && password !== undefined)
-            performLogin(user, password).then((data) => {
-                setUserValidation(data);
-            })
-    }, [password])
+    const validate = (currentUser, values) => {
+        performLogin(currentUser, values.password).then((data) => {
+            console.log(data, '------------');
+        })
+    }
 
-        console.log(userValidation)
     return (
         <>
             <PatientCard Patient={formatPatient(patient)} />
@@ -51,17 +46,17 @@ const DeathValidationForm = ({ patient }) => {
                 initialValues={initialV}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    setUser([user, values['password']]);
-                    
+                    validate(currentUser, values)
                     resetForm();
                 }}
 
             >
                 {(formik) => {
                     const {
+                        values,
                         handleSubmit,
                         isValid,
-                        dirty,
+                        dirty,                        
                     } = formik;
                     return (
                         <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
@@ -72,37 +67,37 @@ const DeathValidationForm = ({ patient }) => {
 
                                 <Column className={styles.main}>
                                     <Row >
-                                        <FormatCardCell
+                                        {/* <FormatCardCell
                                             icon="fa-solid:hospital"
                                             label="Notre Dame S.A"
-                                        />
+                                        /> */}
                                     </Row>
-                                    <Row>
+                                    {/* <Row>
                                         <FormatCardCell
                                             icon="bxs:time-five"
                                             label="23h45"
                                         />
-                                    </Row>
+                                    </Row> */}
                                     <Row>
                                         <FormatCardCell
                                             icon="clarity:date-solid"
-                                            label="12/01/2010"
+                                            label={values.patient.deathDate}
                                         />
                                     </Row>
                                     <Row>
                                         <FormatCardCell
                                             icon="fa-solid:sticky-note"
-                                            label="Projectile"
+                                            label={values.patient.causeOfDeath}
                                         />
                                     </Row>
                                 </Column>
 
                                 <Row className={styles.infoCard}>
                                     <Column>
-                                        <InfoCard title={t("causeIntermLabel", "Cause intermediaire")} info="weruhgruhuiogirgbierbeivseiuefhvbisersrae" />
+                                        <InfoCard title={t("causeSecondLabel", "Cause secondaire")} info={values.patient.secondaryCause} />
                                     </Column>
                                     <Column>
-                                        <InfoCard title={t("causeInitLabel", "Cause initiale")} info="weruhgruhuiogirgbierbeivseiuefhvbisersrae" />
+                                        <InfoCard title={t("causeInitLabel", "Cause initiale")} info={values.patient.initialCause} />
                                     </Column>
                                 </Row>
 
