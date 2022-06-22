@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import styles from "./form.scss"
 import * as Yup from 'yup';
 import { Formik } from "formik";
@@ -10,14 +10,14 @@ import InfoCard from "./components/info-card/info-card";
 import PatientCard from "./patient-card/patient-card";
 import FormatCardCell from "./patient-card/patient-cardCell";
 import { getCurrentUser, openmrsFetch } from "@openmrs/esm-framework";
-import { formatPatient } from "./components/patient-registration.ressources";
+import { formatPatient, performLogin } from "./components/patient-registration.ressources";
 
 
-
-const DeathValidationForm = ({patient}) => {
-    const [user, setUser] = useState(null)
+const DeathValidationForm = ({ patient }) => {
+    const [[user, password], setUser] = useState(['',''])
     const { t } = useTranslation();
     const [initialV, setInitiatV] = useState({ endorsement: "" });
+    const [userValidation, setUserValidation] = useState(null);
 
     const validationSchema = Yup.object().shape({
         password: Yup.string().required("You must endorse to validate"),
@@ -27,7 +27,7 @@ const DeathValidationForm = ({patient}) => {
     useEffect(() => {
         const subscription = getCurrentUser().subscribe(
             user => {
-                setUser(user.username)
+                setUser([user.username, ''])
             }
         )
 
@@ -36,8 +36,14 @@ const DeathValidationForm = ({patient}) => {
         };
     }, []);
 
-    console.log(user);
+    useEffect(() => {
+        if (password !== '' && password !== undefined)
+            performLogin(user, password).then((data) => {
+                setUserValidation(data);
+            })
+    }, [password])
 
+        console.log(userValidation)
     return (
         <>
             <PatientCard Patient={formatPatient(patient)} />
@@ -45,7 +51,8 @@ const DeathValidationForm = ({patient}) => {
                 initialValues={initialV}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    console.log(values)
+                    setUser([user, values['password']]);
+                    
                     resetForm();
                 }}
 

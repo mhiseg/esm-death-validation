@@ -1,5 +1,6 @@
 import useSWR from 'swr';
-import { openmrsFetch, useConfig, openmrsObservableFetch, getCurrentUser, navigate, useSession } from '@openmrs/esm-framework';
+import { openmrsFetch, useConfig, openmrsObservableFetch, refetchCurrentUser, getCurrentUser, navigate, useSession } from '@openmrs/esm-framework';
+
 import { Patient, Relationships, PatientIdentifier, Person, Encounter, Concept, ObsFetchResponse, UsePatientPhotoResult, Address, relationshipType } from './patient-registration-types';
 import { mergeMap } from 'rxjs/operators';
 import { uuidPhoneNumber, encounterTypeCheckIn, unknowLocation, countryName } from './constants';
@@ -458,3 +459,19 @@ const displayResidence = (addresses) => {
 const checkUndefined = (value) => {
   return value !== null || value !== undefined ? value : "";
 };
+
+
+
+
+export function performLogin(username, password) {
+  const token = window.btoa(`${username}:${password}`);
+  return openmrsFetch(`/ws/rest/v1/session`, {
+    headers: {
+      Authorization: `Basic ${token}`,
+      method: 'GET'
+    },
+  }).then((res) => {
+    refetchCurrentUser();
+    return res;
+  });
+}
