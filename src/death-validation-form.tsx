@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./form.scss"
 import * as Yup from 'yup';
 import { Formik } from "formik";
@@ -8,16 +8,19 @@ import { PassField } from "./components/death-form/field/password/password";
 import { Icon } from '@iconify/react';
 import InfoCard from "./components/info-card/info-card";
 import PatientCard from "./patient-card/patient-card";
-
-
+import FormatCardCell from "./patient-card/patient-cardCell";
+import { getCurrentUser, openmrsFetch } from "@openmrs/esm-framework";
 
 const DeathValidation = () => {
+
     const { t } = useTranslation();
     const [initialV, setInitiatV] = useState({ endorsement: "" });
+    let User = getCurrentUserName();
 
     const validationSchema = Yup.object().shape({
         password: Yup.string().required("You must endorse to validate"),
     })
+
     let patient = {
         id: 1,
         identify: 12,
@@ -34,10 +37,18 @@ const DeathValidation = () => {
         occupation: 'programmeur',
         matrimonial: 'celibataire',
         deathDate: '20-09-99',
-        relationship:[]
+        relationship: []
+    };
+
+      function getCurrentUserName() {
+
+        return  openmrsFetch('/ws/rest/v1/session', {
+            method: "GET",
+          }).then(data=>{return})
+
     }
 
-
+    console.log("*********************", User)
     return (
         <>
             <PatientCard Patient={patient} />
@@ -45,56 +56,63 @@ const DeathValidation = () => {
                 initialValues={initialV}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    console.log(values)
                     resetForm();
                 }}
 
-        >
-            {(formik) => {
-                const {
-                    handleSubmit,
-                    isValid,
-                    dirty,
-                } = formik;
-                return (
-                    <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
-                        <Grid fullWidth={true} className={styles.p0}>
-                            <Column className={styles.separator}>
-                                <h4 className={styles.title}>{t("cardValidationTitle","Résumé du décès")}</h4>
-                            </Column>
-
-                            <Column className={styles.main}>
-                                <Row >
-                                    <Column className={styles.column1} lg={1}><Icon icon="fa-solid:hospital" className={styles.icon} /></Column>
-                                    <Column className={styles.column2} lg={11}><p className={styles.font}>Notre Dame S.A</p></Column>
-                                </Row>
-                                <Row>
-                                    <Column className={styles.column1} lg={1}><Icon icon="bxs:time-five" className={styles.icon} /></Column>
-                                    <Column className={styles.column2} lg={11}><p className={styles.font}>23h45</p></Column>
-                                </Row>
-                                <Row>
-                                    <Column className={styles.column1} lg={1}><Icon icon="clarity:date-solid" className={styles.icon} /></Column>
-                                    <Column className={styles.column2} lg={11}><p className={styles.font}>12/01/2010</p></Column>
-                                </Row>
-                                <Row>
-                                    <Column className={styles.column1} lg={1}><Icon icon="fa-solid:sticky-note" className={styles.icon} /></Column>
-                                    <Column className={styles.column2} lg={11}><p className={styles.font}>Projectile</p></Column>
-                                </Row>
-                            </Column>
-
-                            <Row className={styles.infoCard}>
-                                <Column>
-                                    <InfoCard title={t("causeIntermLabel","Cause intermediaire")} info="weruhgruhuiogirgbierbeivseiuefhvbisersrae" />
+            >
+                {(formik) => {
+                    const {
+                        handleSubmit,
+                        isValid,
+                        dirty,
+                    } = formik;
+                    return (
+                        <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
+                            <Grid fullWidth={true} className={styles.p0}>
+                                <Column className={styles.separator}>
+                                    <h4 className={styles.title}>{t("cardValidationTitle", "Résumé du décès")}</h4>
                                 </Column>
-                                <Column>
-                                    <InfoCard title={t("causeInitLabel","Cause initiale")} info="weruhgruhuiogirgbierbeivseiuefhvbisersrae" />
-                                </Column>
-                            </Row>
 
-                            <Row>
-                                <Column className={styles.padingBottom}>
-                                    <PassField />
+                                <Column className={styles.main}>
+                                    <Row >
+                                        <FormatCardCell
+                                            icon="fa-solid:hospital"
+                                            label="Notre Dame S.A"
+                                        />
+                                    </Row>
+                                    <Row>
+                                        <FormatCardCell
+                                            icon="bxs:time-five"
+                                            label="23h45"
+                                        />
+                                    </Row>
+                                    <Row>
+                                        <FormatCardCell
+                                            icon="clarity:date-solid"
+                                            label="12/01/2010"
+                                        />
+                                    </Row>
+                                    <Row>
+                                        <FormatCardCell
+                                            icon="fa-solid:sticky-note"
+                                            label="Projectile"
+                                        />
+                                    </Row>
                                 </Column>
+
+                                <Row className={styles.infoCard}>
+                                    <Column>
+                                        <InfoCard title={t("causeIntermLabel", "Cause intermediaire")} info="weruhgruhuiogirgbierbeivseiuefhvbisersrae" />
+                                    </Column>
+                                    <Column>
+                                        <InfoCard title={t("causeInitLabel", "Cause initiale")} info="weruhgruhuiogirgbierbeivseiuefhvbisersrae" />
+                                    </Column>
+                                </Row>
+
+                                <Row>
+                                    <Column>
+                                        <PassField />
+                                    </Column>
 
 
                                     <Column>
