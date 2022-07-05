@@ -11,9 +11,11 @@ import { getCurrentUser, navigate, openmrsFetch, showToast } from "@openmrs/esm-
 import { formatPatient, performLogin, validatePerson } from "./components/patient-registration.ressources";
 import { Input } from "./components/death-form/input/basic-input/input/input.component";
 import { deathValidated } from "./components/constants";
+import { ConfirmationModal } from "./components/widget/confirmation-modal";
 
 
 const DeathValidationForm = ({ patient }) => {
+    const [openModal, setOpenModal] = useState(false);
     const [initialV, setInitialV] = useState({
         uuid: patient.uuid,
         confirmationCode: "",
@@ -22,27 +24,18 @@ const DeathValidationForm = ({ patient }) => {
     const { t } = useTranslation();
     const abortController = new AbortController();
 
-    const validationSchema = Yup.object().shape({
-        confirmationCode: Yup.string().required("You must endorse to validate"),
-    })
 
-    const validate = (values,resetForm) => {
-        console.log(values.confirmationCode == values.patient.No_dossier)
-        if (values.confirmationCode == values.patient.No_dossier) {
-            validatePerson(abortController, { attributes: [{ attributeType: deathValidated, value: Boolean(true) }] },values.uuid).then(results => {
-                showToast({
-                    title: t('success', 'Successfully Validate'),
-                    kind: 'success',
-                    description: 'Death validated succesfully',
-                })
-                resetForm();
-                    navigate({ to: window.spaBase + "/death/list-unvalidate"});
-                  
+    const validate = (values) => {
+        validatePerson(abortController, { attributes: [{ attributeType: deathValidated, value: Boolean(true) }] }, values.uuid).then(results => {
+            showToast({
+                title: t('success', 'Successfully Validate'),
+                kind: 'success',
+                description: 'Death validated succesfully',
             })
-            .catch(error => showToast({ description: error.message }))
+            navigate({ to: window.spaBase + "/death/list-unvalidate" });
 
-        }else
-        showToast({ description: t("errorValidate","Code patient is incorrect") })
+        })
+            .catch(error => showToast({ description: error.message }))
     }
 
     return (
@@ -50,12 +43,9 @@ const DeathValidationForm = ({ patient }) => {
             <PatientCard Patient={formatPatient(patient)} />
             <Formik
                 initialValues={initialV}
-                validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    validate(values,resetForm)
-                    
-                  }
-                }
+                    ""
+                }}
             >
                 {(formik) => {
                     const {
@@ -78,16 +68,16 @@ const DeathValidationForm = ({ patient }) => {
                                             label="Notre Dame S.A"
                                         /> */}
                                     </Row>
-                                    {/* <Row>
-                                        <FormatCardCell
-                                            icon="bxs:time-five"
-                                            label="23h45"
-                                        />
-                                    </Row> */}
                                     <Row>
                                         <FormatCardCell
                                             icon="clarity:date-solid"
-                                            label={values.patient.deathDate}
+                                            label={(new Intl.DateTimeFormat('fr-FR', { dateStyle: 'full'}).format(new Date(values.patient.deathDate)))}
+                                        />
+                                    </Row>
+                                    <Row>
+                                        <FormatCardCell
+                                            icon="bxs:time-five"
+                                            label={ (values.patient.deathDate.substring(0,19).split("T")[1])}
                                         />
                                     </Row>
                                     <Row>
@@ -108,10 +98,6 @@ const DeathValidationForm = ({ patient }) => {
                                 </Row>
 
                                 <Row>
-                                    <Column>
-                                        <Input id={"confirmationCode"} name={"confirmationCode"} labelText={t("confirmationCode")} light={false} />
-                                    </Column>
-
 
                                     <Column>
                                         <Row>
@@ -129,13 +115,18 @@ const DeathValidationForm = ({ patient }) => {
                                                     <Button
                                                         className={styles.buttonStyle1}
                                                         kind="tertiary"
-                                                        type="submit"
                                                         size="sm"
                                                         isSelected={true}
-                                                        disabled={!(dirty && isValid)}
+                                                        onClick={() => {
+                                                            setOpenModal(true);
+                                                        }}
                                                     >
                                                         {t("confirmButton", "Enregistrer")}
                                                     </Button>
+                                                    <ConfirmationModal
+                                                        confirmModal={() => { validate(values); setOpenModal(false); }}
+                                                        closeModal={setOpenModal}
+                                                        modalState={openModal} />
                                                 </div>
                                             </Column>
                                         </Row>

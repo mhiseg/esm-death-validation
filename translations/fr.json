@@ -2,6 +2,7 @@
   "validationDeathTitle": "Validation d'un patient mort",
   "cardValidationTitle": "Résumé du décès",
   "messageErrorPassword": "Vous devriez signer avant de valider",
+  "messageModalValidation":"Vous êtes sur le point de valider un décès. Voulez-vous continuer?",
   "passLabelText": "Signature",
   "causeSecondLabel": "Cause Secondaire",
   "causeInitLabel": "Cause initiale",

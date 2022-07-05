@@ -18,14 +18,15 @@ const DeathValidation: React.FC = () => {
 
 
     const toSearchPatient = (patient) => {
-        const isValidate = patient.person?.attributes.find((attribute) => attribute.attributeType.uuid === deathValidated);
-        if (!patient.data || patient.person.dead !== true)
+        const isValidate = patient?.person?.attributes.find((attribute) => attribute.attributeType.uuid === deathValidated);
+        console.log(!patient,' || ',patient.person.dead,'   ]]',isValidate?.value)
+        if (!patient || patient?.person.dead !== true || isValidate?.value)
             navigate(to);
     }
 
 
     const getFormPatient = () => {
-        toSearchPatient(patientSearch.data)
+        toSearchPatient(patientSearch?.data)
         return (
             <>
                 <>

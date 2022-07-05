@@ -21,3 +21,4 @@ export const covidCaseAssessmentEncType = '253a43d3-c99e-415c-8b78-ee7d4d3c1d54'
 export const covidVaccinationEncType = '5b37ce7a-c55e-4226-bdc8-5af04025a6de';
 export const covidLabTestEncType = 'a77d3e7f-5c8f-4074-a207-77a70e197b0c';
 
+
