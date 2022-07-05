@@ -17,11 +17,10 @@ import { deathValidated} from "./components/constants";
 const DeathValidationForm = ({ patient, obs }) => {
     const [openModal, setOpenModal] = useState(false);
     const [initialV, setInitialV] = useState({
-        uuid: patient.uuid,
+        uuid: patient?.uuid,
         confirmationCode: "",
         patient: formatPatient(patient, obs)
     });
-
     const { t } = useTranslation();
     const abortController = new AbortController();
 
