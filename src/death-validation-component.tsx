@@ -29,7 +29,7 @@ const DeathValidation: React.FC = () => {
                 <>
                     <h4 className={`title-page`}>{t('validationDeathTitle', 'Validate a death')}</h4>
                     <div className={`mhiseg-main-content `}>
-                        <DeathValidationForm patient={patientSearch} obs={obs} />
+                        <DeathValidationForm patient={patientSearch.data} obs={obs} />
                     </div>
                 </>
             </>

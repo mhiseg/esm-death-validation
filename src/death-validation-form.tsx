@@ -10,16 +10,14 @@ import FormatCardCell from "./patient-card/patient-cardCell";
 import { navigate, showToast } from "@openmrs/esm-framework";
 import { formatPatient, validatePerson } from "./components/patient-registration.ressources";
 import { Input } from "./components/death-form/input/basic-input/input/input.component";
-import { deathValidated, maritalStatusConcept } from "./components/constants";
-import { usePatient } from "./components/usePatient";
+import { deathValidated } from "./components/constants";
 
 const DeathValidationForm = ({ patient, obs }) => {
     const [initialV, setInitialV] = useState({
-        uuid: patient.uuid,
+        uuid: patient?.uuid,
         confirmationCode: "",
         patient: formatPatient(patient, obs)
     });
-
     const { t } = useTranslation();
     const abortController = new AbortController();
     const validationSchema = Yup.object().shape({
@@ -27,7 +25,6 @@ const DeathValidationForm = ({ patient, obs }) => {
     })
 
     const validate = (values, resetForm) => {
-        console.log(values.confirmationCode == values.patient.No_dossier)
         if (values.confirmationCode == values.patient.No_dossier) {
             validatePerson(abortController, { attributes: [{ attributeType: deathValidated, value: Boolean(true) }] }, values.uuid).then(results => {
                 showToast({

@@ -126,9 +126,8 @@ export const formatPatient =  (patient,obs) => {
         value: identifier?.display.split(" = ")[1].trim(),
       };
     });
-  const identities = formatAttribute(patient?.data?.identifiers);
-  const personAttributes = formatAttribute(patient?.data?.person?.attributes);
-  console.log(patient)
+  const identities = formatAttribute(patient?.identifiers);
+  const personAttributes = formatAttribute(patient?.person?.attributes);
   return {
     id: patient?.uuid,
     identify: identities?.find(
@@ -137,21 +136,22 @@ export const formatPatient =  (patient,obs) => {
     No_dossier: identities?.find(
       (identifier) => identifier.type == "OpenMRS ID"
     )?.value,
-    firstName: patient?.data?.person?.names?.[0]?.familyName,
-    lastName: patient?.data?.person?.names?.[0]?.givenName,
-    birth: patient?.data?.person?.birthdate?.split("T")?.[0],
-    residence: displayResidence(patient?.data?.person?.addresses[0]),
+    firstName: patient?.person?.names?.[0]?.familyName,
+    lastName: patient?.person?.names?.[0]?.givenName,
+    birth: patient?.person?.birthdate?.split("T")?.[0],
+    residence: displayResidence(patient?.person?.addresses[0]),
     phoneNumber: personAttributes?.find(
       (attribute) => attribute.type == "Telephone Number"
     )?.value,
-    gender: checkUndefined(patient?.data?.person?.gender),
+    gender: checkUndefined(patient?.person?.gender),
     birthplace: personAttributes?.find((attribute) => attribute.type == "Birthplace")?.value,
-    death: patient?.data?.person?.dead,
+    death: patient?.person?.dead,
     occupation: formatConcept(obs, occupationConcept),
     matrimonial: formatConcept(obs, maritalStatusConcept),
     habitat: formatConcept(obs, habitatConcept),
-    causeOfDeath: patient?.data?.person?.causeOfDeath?.display,
-    deathDate: patient?.data?.person?.deathDate,
+
+    causeOfDeath: patient?.person?.causeOfDeath?.display,
+    deathDate: patient?.person?.deathDate,
     initialCause: personAttributes?.find((attribute) => attribute.type == "Initial Cause Of Death")?.value,
     secondaryCause: personAttributes?.find((attribute) => attribute.type == "Secondary Cause Of Death")?.value
   }
@@ -185,3 +185,4 @@ export function performLogin(username, password) {
     return res;
   });
 }
+
