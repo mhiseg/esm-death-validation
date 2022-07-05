@@ -3,7 +3,8 @@ import { openmrsFetch, useConfig, openmrsObservableFetch, refetchCurrentUser, ge
 
 import { Patient, Relationships, PatientIdentifier, Person, Encounter, Concept, ObsFetchResponse, UsePatientPhotoResult, Address, relationshipType } from './patient-registration-types';
 import { mergeMap } from 'rxjs/operators';
-import { uuidPhoneNumber, encounterTypeCheckIn, unknowLocation, countryName, originCauseUuid, secondaryCauseUuid } from './constants';
+import { uuidPhoneNumber, encounterTypeCheckIn, unknowLocation, countryName, originCauseUuid, secondaryCauseUuid, maritalStatusConcept, habitatConcept, occupationConcept } from './constants';
+import { usePatient } from './usePatient';
 
 const BASE_WS_API_URL = '/ws/rest/v1/';
 const BASE_FHIR_API_URL = '/ws/fhir2/R4/';
@@ -81,6 +82,9 @@ export function getSynchronizedCurrentUser(opts: any) {
     }),
   );
 }
+export function getCurrentSession() {
+  return openmrsObservableFetch(`/ws/rest/v1/session`);
+}
 
 export function formAddres(address): Address {
   if (address) {
@@ -102,50 +106,55 @@ export function validatePerson(abortController: AbortController, person, uuid: s
   });
 }
 
+const formatConcept = (concepts, uuid) => {
+  let value;
+  concepts?.map((concept) => (concept?.concept?.uuid == uuid) && (value = concept?.answer?.display))
+  return value;
+}
 export async function fetchRelationshipType() {
   return openmrsFetch(`${BASE_WS_API_URL}relationshiptype`, {
     method: "GET",
   });
 }
 
-export const formatPatient = (patient) => {
+export const formatPatient =  (patient,obs) => {
 
   const formatAttribute = (item) =>
-    item.map((identifier) => {
+    item?.map((identifier) => {
       return {
-        type: identifier.display.split(" = ")[0].trim(),
-        value: identifier.display.split(" = ")[1].trim(),
+        type: identifier?.display.split(" = ")[0].trim(),
+        value: identifier?.display.split(" = ")[1].trim(),
       };
     });
-
-  const identities = formatAttribute(patient.identifiers);
-  const personAttributes = formatAttribute(patient.person?.attributes);
+  const identities = formatAttribute(patient?.data?.identifiers);
+  const personAttributes = formatAttribute(patient?.data?.person?.attributes);
+  console.log(patient)
   return {
-    id: patient.uuid,
-    identify: identities.find(
+    id: patient?.uuid,
+    identify: identities?.find(
       (identifier) => identifier.type == "CIN" || identifier.type == "CIN"
     )?.value,
-    No_dossier: identities.find(
+    No_dossier: identities?.find(
       (identifier) => identifier.type == "OpenMRS ID"
     )?.value,
-    firstName: patient?.person?.names?.[0]?.familyName,
-    lastName: patient?.person?.names?.[0]?.givenName,
-    birth: patient?.person?.birthdate.split("T")?.[0],
-    residence: displayResidence(patient.person?.addresses[0]),
-    habitat: "",
-    phoneNumber: personAttributes.find(
+    firstName: patient?.data?.person?.names?.[0]?.familyName,
+    lastName: patient?.data?.person?.names?.[0]?.givenName,
+    birth: patient?.data?.person?.birthdate?.split("T")?.[0],
+    residence: displayResidence(patient?.data?.person?.addresses[0]),
+    phoneNumber: personAttributes?.find(
       (attribute) => attribute.type == "Telephone Number"
     )?.value,
-    gender: checkUndefined(patient?.person?.gender),
-    birthplace: personAttributes.find( (attribute) => attribute.type == "Birthplace")?.value,
-    death: patient.person.dead,
-    occupation: "",
-    matrimonial: "",
-    causeOfDeath: patient.person.causeOfDeath.display,
-    deathDate: patient.person.deathDate,
-    initialCause: personAttributes.find((attribute) => attribute.type == "Initial Cause Of Death")?.value,
-    secondaryCause: personAttributes.find((attribute) => attribute.type == "Secondary Cause Of Death")?.value
-  };
+    gender: checkUndefined(patient?.data?.person?.gender),
+    birthplace: personAttributes?.find((attribute) => attribute.type == "Birthplace")?.value,
+    death: patient?.data?.person?.dead,
+    occupation: formatConcept(obs, occupationConcept),
+    matrimonial: formatConcept(obs, maritalStatusConcept),
+    habitat: formatConcept(obs, habitatConcept),
+    causeOfDeath: patient?.data?.person?.causeOfDeath?.display,
+    deathDate: patient?.data?.person?.deathDate,
+    initialCause: personAttributes?.find((attribute) => attribute.type == "Initial Cause Of Death")?.value,
+    secondaryCause: personAttributes?.find((attribute) => attribute.type == "Secondary Cause Of Death")?.value
+  }
 };
 
 const displayResidence = (addresses) => {
