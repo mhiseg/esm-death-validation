@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react";
 import styles from "./patient-card.scss";
 import FormatCardCell from "./patient-cardCell";
 import RelationShipCard from "../relationShipCard/relationShiphCard";
-import { navigate, NavigateOptions } from "@openmrs/esm-framework";
 import { useTranslation } from "react-i18next";
 
 const PatientCard = ({ Patient }) => {
