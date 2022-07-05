@@ -7,6 +7,8 @@
   "causeSecondLabel": "Secondary cause",
   "causeInitLabel": "Initial cause",
   "cancelButton": "Cancel",
-  "confirmButton": "Confirm",
-  "local": "en-EN"
+  "confirmButton": "Validate",
+  "confirmModalButton": "Approve",
+  "local": "en-EN",
+  "validationModal": "Death validation"
 }
