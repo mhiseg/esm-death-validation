@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./form.scss"
 import * as Yup from 'yup';
 import { Formik } from "formik";
@@ -7,54 +7,52 @@ import { useTranslation } from "react-i18next";
 import InfoCard from "./components/info-card/info-card";
 import PatientCard from "./patient-card/patient-card";
 import FormatCardCell from "./patient-card/patient-cardCell";
-import { getCurrentUser, navigate, openmrsFetch, showToast } from "@openmrs/esm-framework";
-import { formatPatient, performLogin, validatePerson } from "./components/patient-registration.ressources";
+import { navigate, showToast } from "@openmrs/esm-framework";
+import { formatPatient, validatePerson } from "./components/patient-registration.ressources";
 import { Input } from "./components/death-form/input/basic-input/input/input.component";
-import { deathValidated } from "./components/constants";
+import { deathValidated, maritalStatusConcept } from "./components/constants";
+import { usePatient } from "./components/usePatient";
 
-
-const DeathValidationForm = ({ patient }) => {
+const DeathValidationForm = ({ patient, obs }) => {
     const [initialV, setInitialV] = useState({
         uuid: patient.uuid,
         confirmationCode: "",
-        patient: formatPatient(patient)
+        patient: formatPatient(patient, obs)
     });
+
     const { t } = useTranslation();
     const abortController = new AbortController();
-
     const validationSchema = Yup.object().shape({
         confirmationCode: Yup.string().required("You must endorse to validate"),
     })
 
-    const validate = (values,resetForm) => {
+    const validate = (values, resetForm) => {
         console.log(values.confirmationCode == values.patient.No_dossier)
         if (values.confirmationCode == values.patient.No_dossier) {
-            validatePerson(abortController, { attributes: [{ attributeType: deathValidated, value: Boolean(true) }] },values.uuid).then(results => {
+            validatePerson(abortController, { attributes: [{ attributeType: deathValidated, value: Boolean(true) }] }, values.uuid).then(results => {
                 showToast({
                     title: t('success', 'Successfully Validate'),
                     kind: 'success',
                     description: 'Death validated succesfully',
                 })
                 resetForm();
-                    navigate({ to: window.spaBase + "/death/list-unvalidate"});
-                  
-            })
-            .catch(error => showToast({ description: error.message }))
+                navigate({ to: window.spaBase + "/death/list-unvalidate" });
 
-        }else
-        showToast({ description: t("errorValidate","Code patient is incorrect") })
+            })
+                .catch(error => showToast({ description: error.message }))
+
+        } else
+            showToast({ description: t("errorValidate", "Code patient is incorrect") })
     }
 
     return (
         <>
-            <PatientCard Patient={formatPatient(patient)} />
             <Formik
                 initialValues={initialV}
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm }) => {
-                    validate(values,resetForm)
-                    
-                  }
+                    validate(values, resetForm)
+                }
                 }
             >
                 {(formik) => {
@@ -64,7 +62,8 @@ const DeathValidationForm = ({ patient }) => {
                         isValid,
                         dirty,
                     } = formik;
-                    return (
+                    return <>
+                        <PatientCard Patient={values.patient} />
                         <Form name="form" className={styles.cardForm} onSubmit={handleSubmit}>
                             <Grid fullWidth={true} className={styles.p0}>
                                 <Column className={styles.separator}>
@@ -72,18 +71,10 @@ const DeathValidationForm = ({ patient }) => {
                                 </Column>
 
                                 <Column className={styles.main}>
-                                    <Row >
-                                        {/* <FormatCardCell
-                                            icon="fa-solid:hospital"
-                                            label="Notre Dame S.A"
-                                        /> */}
+                                    <Row>
+
                                     </Row>
-                                    {/* <Row>
-                                        <FormatCardCell
-                                            icon="bxs:time-five"
-                                            label="23h45"
-                                        />
-                                    </Row> */}
+
                                     <Row>
                                         <FormatCardCell
                                             icon="clarity:date-solid"
@@ -100,10 +91,14 @@ const DeathValidationForm = ({ patient }) => {
 
                                 <Row className={styles.infoCard}>
                                     <Column>
-                                        <InfoCard title={t("causeSecondLabel", "Cause secondaire")} info={values.patient.secondaryCause} />
+                                        <InfoCard
+                                            title={t("causeSecondLabel", "Cause secondaire")}
+                                            info={values.patient.secondaryCause} />
                                     </Column>
                                     <Column>
-                                        <InfoCard title={t("causeInitLabel", "Cause initiale")} info={values.patient.initialCause} />
+                                        <InfoCard title={t("causeInitLabel", "Cause initiale")}
+                                            info={values.patient.initialCause}
+                                        />
                                     </Column>
                                 </Row>
 
@@ -143,7 +138,7 @@ const DeathValidationForm = ({ patient }) => {
                                 </Row>
                             </Grid>
                         </Form>
-                    );
+                    </>
                 }}
             </Formik>
         </>
