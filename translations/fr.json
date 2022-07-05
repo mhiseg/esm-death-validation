@@ -7,5 +7,6 @@
   "causeSecondLabel": "Cause Secondaire",
   "causeInitLabel": "Cause initiale",
   "cancelButton": "Annuler",
-  "confirmButton": "Confirmer"
+  "confirmButton": "Confirmer",
+  "local": "fr-FR"
 }

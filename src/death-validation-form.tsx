@@ -68,7 +68,7 @@ const DeathValidationForm = ({ patient, obs }) => {
                                     <Row>
                                         <FormatCardCell
                                             icon="clarity:date-solid"
-                                            label={(new Intl.DateTimeFormat('fr-FR', { dateStyle: 'full'}).format(new Date(values.patient.deathDate)))}
+                                            label={(new Intl.DateTimeFormat(t("local",'fr-FR'), { dateStyle: 'full'}).format(new Date(values.patient.deathDate)))}
                                         />
                                     </Row>
                                     <Row>
