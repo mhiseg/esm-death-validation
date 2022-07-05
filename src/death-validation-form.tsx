@@ -110,6 +110,7 @@ const DeathValidationForm = ({ patient, obs }) => {
                                                         type="reset"
                                                         size="sm"
                                                         isSelected={true}
+                                                        onClick={()=>{ navigate({ to: window.spaBase + "/death/list-unvalidate" }); }}
                                                     >
                                                         {t("cancelButton", "Annuler")}
                                                     </Button>
