@@ -50,7 +50,7 @@ const PatientCard = ({ Patient }) => {
                 <Column lg={4}>
                   <FormatCardCell
                     icon="clarity:calendar-solid"
-                    label={Patient.birth}
+                    label={new Date(Patient.birth).toLocaleDateString("fr")}
                   />
 
                   <FormatCardCell
